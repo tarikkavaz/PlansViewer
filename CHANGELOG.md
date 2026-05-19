@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.0.1
+## 1.0.0
 
 - Initial release.
 - Add searchable editor webview for Cursor `.cursor/plans/*.plan.md` files.

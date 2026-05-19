@@ -2,7 +2,7 @@
   "name": "plans-viewer",
   "displayName": "Plans Viewer",
   "description": "Open Cursor project plans from .cursor/plans in a searchable editor view.",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "publisher": "tarikkavaz",
   "license": "MIT",
   "icon": "media/icon.png",
@@ -37,6 +37,8 @@
     }
   },
   "activationEvents": [
+    "onStartupFinished",
+    "workspaceContains:.cursor/plans/*.plan.md",
     "onCommand:plansViewer.openPlans"
   ],
   "main": "./out/src/extension.js",

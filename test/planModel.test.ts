@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parsePlanDocument, sortPlans, filterPlans } from "../src/planModel";
+import { parsePlanDocument, sortPlans, filterPlans, formatPlansStatusText } from "../src/planModel";
 
 const content = `---
 name: Appearance page and nav
@@ -149,4 +149,9 @@ test("filterPlans excludes plans without matching words", () => {
   assert.deepEqual(filterPlans(plans, "App.tsx").map((plan) => plan.fileName), ["appearance_page.plan.md"]);
   assert.deepEqual(filterPlans(plans, "definitelymissing").map((plan) => plan.fileName), []);
   assert.deepEqual(filterPlans(plans, "bow").map((plan) => plan.fileName), []);
+});
+
+test("formatPlansStatusText renders singular and plural status bar labels", () => {
+  assert.equal(formatPlansStatusText(1), "$(list-unordered) 1 Plan");
+  assert.equal(formatPlansStatusText(33), "$(list-unordered) 33 Plans");
 });

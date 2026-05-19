@@ -105,6 +105,10 @@ export function formatModifiedDate(timestamp: number): string {
   }).format(new Date(timestamp));
 }
 
+export function formatPlansStatusText(count: number): string {
+  return `$(list-unordered) ${count} ${count === 1 ? "Plan" : "Plans"}`;
+}
+
 function splitFrontmatter(content: string): FrontmatterResult {
   const normalized = content.replace(/^\uFEFF/, "");
 
