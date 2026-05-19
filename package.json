@@ -1,0 +1,73 @@
+{
+  "name": "plans-viewer",
+  "displayName": "Plans Viewer",
+  "description": "Open Cursor project plans from .cursor/plans in a searchable editor view.",
+  "version": "0.0.1",
+  "publisher": "tarikkavaz",
+  "license": "MIT",
+  "icon": "media/icon.png",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "keywords": [
+    "cursor",
+    "plans",
+    "markdown",
+    "project plans",
+    "webview"
+  ],
+  "galleryBanner": {
+    "color": "#1f1f1f",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tarikkavaz/plans-viewer.git"
+  },
+  "homepage": "https://github.com/tarikkavaz/plans-viewer#readme",
+  "bugs": {
+    "url": "https://github.com/tarikkavaz/plans-viewer/issues"
+  },
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "activationEvents": [
+    "onCommand:plansViewer.openPlans"
+  ],
+  "main": "./out/src/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "plansViewer.openPlans",
+        "title": "Open Plans",
+        "category": "Plans Viewer",
+        "icon": "$(list-unordered)"
+      }
+    ],
+    "menus": {
+      "commandPalette": [
+        {
+          "command": "plansViewer.openPlans"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "pnpm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "pnpm run compile && node --test out/test/**/*.test.js",
+    "package": "pnpm run test && vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.18",
+    "@types/vscode": "1.85.0",
+    "@vscode/vsce": "^3.6.2",
+    "typescript": "^5.8.3"
+  }
+}

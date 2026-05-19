@@ -1,0 +1,12 @@
+node_modules
+src
+test
+out/test
+.vscode
+.gitignore
+tsconfig.json
+pnpm-lock.yaml
+icon.png
+**/*.map
+**/*.test.js
+*.vsix
