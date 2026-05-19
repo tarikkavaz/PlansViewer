@@ -25,11 +25,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/tarikkavaz/plans-viewer.git"
+    "url": "https://github.com/tarikkavaz/PlansViewer.git"
   },
-  "homepage": "https://github.com/tarikkavaz/plans-viewer#readme",
+  "homepage": "https://github.com/tarikkavaz/PlansViewer#readme",
   "bugs": {
-    "url": "https://github.com/tarikkavaz/plans-viewer/issues"
+    "url": "https://github.com/tarikkavaz/PlansViewer/issues"
   },
   "capabilities": {
     "untrustedWorkspaces": {
