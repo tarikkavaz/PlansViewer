@@ -31,16 +31,46 @@ export interface PlanItem {
 
 interface FrontmatterResult {
   frontmatter: Record<string, unknown>;
+  frontmatterText: string;
   body: string;
 }
 
+export function countTodosInFrontmatter(frontmatterText: string): number {
+  const lines = frontmatterText.split(/\r?\n/);
+  let inTodos = false;
+  let count = 0;
+
+  for (const line of lines) {
+    if (/^todos:\s*\[\s*\]?\s*$/.test(line)) {
+      return 0;
+    }
+
+    if (/^todos:\s*$/.test(line)) {
+      inTodos = true;
+      continue;
+    }
+
+    if (inTodos) {
+      if (/^[A-Za-z0-9_-]+:\s*/.test(line)) {
+        break;
+      }
+
+      if (/^\s+-\s+id:/.test(line)) {
+        count += 1;
+      }
+    }
+  }
+
+  return count;
+}
+
 export function parsePlanDocument(input: PlanDocumentInput): PlanItem {
-  const { frontmatter, body } = splitFrontmatter(input.content);
+  const { frontmatter, frontmatterText, body } = splitFrontmatter(input.content);
   const bodyTitle = findFirstHeading(body);
   const title = readString(frontmatter.name) || bodyTitle || stripPlanExtension(input.fileName);
   const overview = readString(frontmatter.overview) || findFirstParagraph(body);
   const isProject = readBoolean(frontmatter.isProject);
-  const todoCount = readTodoCount(frontmatter.todos);
+  const todoCount = countTodosInFrontmatter(frontmatterText) || readTodoCount(frontmatter.todos);
   const searchText = normalizeBodyForSearch(body);
 
   return {
@@ -84,6 +114,28 @@ export function sortPlans(plans: readonly PlanItem[], sortKey: PlanSortKey): Pla
   return sorted;
 }
 
+export interface PaginatedResult<T> {
+  page: number;
+  pageCount: number;
+  items: T[];
+}
+
+export function paginatePlans<T>(items: readonly T[], page: number, pageSize: number): PaginatedResult<T> {
+  if (pageSize <= 0) {
+    return { page: 1, pageCount: 1, items: [...items] };
+  }
+
+  const pageCount = Math.max(1, Math.ceil(items.length / pageSize));
+  const safePage = Math.min(Math.max(1, page), pageCount);
+  const start = (safePage - 1) * pageSize;
+
+  return {
+    page: safePage,
+    pageCount,
+    items: items.slice(start, start + pageSize)
+  };
+}
+
 export function filterPlans(plans: readonly PlanItem[], query: string): PlanItem[] {
   const trimmedQuery = query.trim();
 
@@ -113,14 +165,14 @@ function splitFrontmatter(content: string): FrontmatterResult {
   const normalized = content.replace(/^\uFEFF/, "");
 
   if (!normalized.startsWith("---")) {
-    return { frontmatter: {}, body: normalized };
+    return { frontmatter: {}, frontmatterText: "", body: normalized };
   }
 
   const firstLineEnd = normalized.indexOf("\n");
   const closingStart = normalized.indexOf("\n---", firstLineEnd + 1);
 
   if (firstLineEnd === -1 || closingStart === -1) {
-    return { frontmatter: {}, body: normalized };
+    return { frontmatter: {}, frontmatterText: "", body: normalized };
   }
 
   const closingEnd = normalized.indexOf("\n", closingStart + 1);
@@ -129,6 +181,7 @@ function splitFrontmatter(content: string): FrontmatterResult {
 
   return {
     frontmatter: parseSimpleYaml(frontmatterText),
+    frontmatterText,
     body
   };
 }
